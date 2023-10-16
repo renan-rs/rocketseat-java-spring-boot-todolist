@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -74,6 +75,18 @@ public class TaskController {
 
         var taskUpdated = this.taskRepository.save(task);
         return ResponseEntity.ok().body(taskUpdated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(HttpServletRequest request, @PathVariable UUID id){
+        if(!this.taskRepository.existsById(id)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Tarefa não encontrada");
+        }
+
+        this.taskRepository.deleteById(id);
+        return ResponseEntity.ok().body("Tarefa deletada");
+        //System.out.println("Task de id " + id + " foi deletada");
     }
 
 }
